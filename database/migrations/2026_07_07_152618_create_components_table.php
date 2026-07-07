@@ -13,7 +13,20 @@ return new class extends Migration
     {
         Schema::create('components', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+
+        $table->foreignId('asset_id')
+              ->constrained('assets')
+              ->onDelete('cascade');
+
+        $table->foreignId('component_type_id')
+              ->constrained('component_types');
+
+        $table->string('brand', 255)->nullable();
+        $table->string('serial_number', 255)->nullable();
+        $table->json('specifications')->nullable(); 
+
+        $table->timestamps();
+        $table->softDeletes();
         });
     }
 

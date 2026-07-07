@@ -12,8 +12,25 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('assignments', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+          $table->id();
+
+        $table->foreignId('asset_id')
+              ->constrained('assets')
+              ->onDelete('cascade');
+
+        $table->foreignId('user_id')
+              ->constrained('users')
+              ->onDelete('cascade');
+
+        $table->timestamp('assigned_at');
+        $table->timestamp('returned_at')->nullable();
+        
+        $table->string('signature', 255)->nullable();
+        $table->text('condition_on_delivery')->nullable();
+        $table->text('condition_on_return')->nullable();
+
+        $table->timestamps();
+        $table->softDeletes();
         });
     }
 
