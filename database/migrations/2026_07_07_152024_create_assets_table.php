@@ -17,8 +17,7 @@ return new class extends Migration
         $table->foreignId('category_id')
               ->constrained();
 
-        $table->foreignId('manufacturer_id')
-              ->constrained();
+     
 
         $table->foreignId('location_id')
               ->constrained();
