@@ -17,6 +17,7 @@ class Asset extends Model
         'serial_number',
         'model_number',
         'purchase_date',
+        'inventory_tag',
         'cost',
         'notes',
         'category_id',
@@ -40,4 +41,8 @@ class Asset extends Model
     public function location(): BelongsTo{
         return $this->belongsTo(locations::class);
     }
+
+   public function components():HasMany{
+        return $this->HasMany(Component::class);
+   }
 }
