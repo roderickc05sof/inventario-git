@@ -97,7 +97,20 @@ defineOptions({
                 />
                 <InputError :message="errors.password_confirmation" />
             </div>
-
+        <div class="grid gap-2">
+    <Label for="role">ROLE</Label>
+   <select
+    id="role"
+    name="id_role"
+    required
+>
+    <option value="" disabled selected>Select a role</option>
+    <option value="1">Administrator</option>
+    <option value="2">Soporte Técnico</option>
+    <option value="3">Consulta</option>
+</select>
+    <InputError :message="errors.id_role" />
+</div>
             <Button
                 type="submit"
                 class="mt-2 w-full"
