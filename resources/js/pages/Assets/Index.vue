@@ -1,61 +1,40 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import PendingInvitationsModal from '@/components/PendingInvitationsModal.vue';
-import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
-import { assets } from '@/routes';
-import type { DashboardInvitation, Team } from '@/types';
 
 defineProps<{
-    pendingInvitations?: DashboardInvitation[];
+    assets: any[];
 }>();
-
-defineOptions({
-    layout: (props: { currentTeam?: Team | null }) => ({
-        breadcrumbs: [
-            {
-                title: 'assets',
-                href: props.currentTeam
-                 ,
-            },
-        ],
-    }),
-});
 </script>
 
 <template>
-    <Head title="assets" />
+    <Head title="Assets" />
 
-    <PendingInvitationsModal
-        v-if="pendingInvitations && pendingInvitations.length > 0"
-        :invitations="pendingInvitations"
-    />
+    <div class="p-6">
+        <h1 class="text-2xl font-bold mb-4">Inventario de Activos</h1>
 
+        <table class="border-collapse border border-gray-400 w-full">
+            <thead>
+                <tr>
+                    <th class="border p-2">Nombre</th>
+                    <th class="border p-2">Categoría</th>
+                    <th class="border p-2">Fabricante</th>
+                    <th class="border p-2">Ubicación</th>
+                    <th class="border p-2">Estado</th>
+                </tr>
+            </thead>
 
-
-    <div
-        class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-    >
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
-            </div>
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
-            </div>
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
-            </div>
-        </div>
-        <div
-            class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
-        >
-            <PlaceholderPattern />
-        </div>
+            <tbody>
+                <tr
+                    v-for="asset in assets"
+                    :key="asset.id"
+                >
+                    <td class="border p-2">{{ asset.name }}</td>
+                    <td class="border p-2">{{ asset.category.name }}</td>
+                    <td class="border p-2">{{ asset.manufacturer.name }}</td>
+                    <td class="border p-2">{{ asset.location.name }}</td>
+                    <td class="border p-2">{{ asset.status.name }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </template>

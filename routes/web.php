@@ -18,6 +18,8 @@ Route::prefix('{current_team}')
         // Rutas de Activos protegidas dentro del contexto del equipo
     });
      Route::get('assets', [AssetController::class, 'index'])->name('assets.index');
+     Route::get('assets/create',[AssetController::class, 'create'])->name('assets.create');
+     Route::post('/assets',[AssetController::class,'store'])->name('assets.store');
 
  //    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 
