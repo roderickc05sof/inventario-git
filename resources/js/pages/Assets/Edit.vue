@@ -4,49 +4,65 @@ interface Option {
     id: number;
     name: string;
 }
+interface Asset {
+    id: number;
+    name: string;
+    category_id: number;
+    manufacturer_id: number;
+    location_id: number;
+    status_id: number;
+    model_number: string;
+    serial_number: string;
+    inventory_tag: string;
+    purchase_date: string;
+    cost: string;
+    notes: string;
+}
 
-defineProps<{
+
+const props = defineProps<{
+    asset: Asset;
     categories: Option[];
     manufacturers: Option[];
     locations: Option[];
     statuses: Option[];
 }>();
 const form = useForm({
-    name: '',
-    category_id: '',
-    manufacturer_id: '',
-    location_id: '',
-    status_id: '',
-    model_number: '',
-    serial_number: '',
-    inventory_tag: '',
-    purchase_date: '',
-    cost: '',
-    notes: '',
+    name: props.asset.name,
+    category_id: props.asset.category_id,
+    manufacturer_id: props.asset.manufacturer_id,
+    location_id: props.asset.location_id,
+    status_id: props.asset.status_id,
+    model_number: props.asset.model_number,
+    serial_number: props.asset.serial_number,
+    inventory_tag: props.asset.inventory_tag,
+    purchase_date: props.asset.purchase_date,
+    cost: props.asset.cost,
+    notes: props.asset.notes,
 });
 function submit() {
-    form.post('/assets');
+    form.put(`/assets/${props.asset.id}`);
 }
 
 </script>
 
 <template>
-    <Head title="Nuevo Activo" />
+    <Head title="Editar Activo" />
 
-    <!-- Contenedor principal que centra el formulario en la pantalla con un ancho máximo elegante -->
+    <!-- Contenedor principal alineado con el estilo del formulario de creación -->
     <div class="max-w-4xl mx-auto p-6 md:p-10">
         
-        <!-- Cabecera Minimalista -->
+        <!-- Cabecera Minimalista de Edición -->
         <div class="mb-8 border-b border-slate-800/60 pb-6">
             <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Crear Activo
+                Editar Activo
             </h1>
             <p class="mt-2 text-sm text-slate-400">
-                Registra un nuevo equipo de hardware en el inventario del sistema.
+                Modifica los detalles y especificaciones del equipo seleccionado.
             </p>
         </div>
 
-        <!-- Tarjeta del Formulario (Le da profundidad sobre el fondo de la app) -->
+        <!-- Tarjeta del Formulario (Estilo premium flotante) -->
         <form @submit.prevent="submit" class="bg-slate-900/40 border border-slate-800/80 rounded-xl p-6 md:p-8 shadow-2xl backdrop-blur-sm space-y-8">
             
             <!-- SECCIÓN 1: Información Principal -->
@@ -87,16 +103,14 @@ function submit() {
                     <!-- Categoría -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Categoría</label>
-                        <div class="relative">
-                            <select 
-                                class="appearance-none border border-slate-800 bg-slate-950/60 text-white rounded-lg px-3 py-2 w-full focus:outline-none focus:border-slate-700 focus:ring-1 focus:ring-slate-700 hover:border-slate-800 transition-all text-sm shadow-inner cursor-pointer"
-                                v-model="form.category_id"
-                                required
-                            >
-                                <option value="" disabled selected class="bg-slate-950 text-slate-500">Selecciona...</option>
-                                <option v-for="category in categories" :key="category.id" :value="category.id" class="bg-slate-900 text-white">{{ category.name }}</option>
-                            </select>
-                        </div>
+                        <select 
+                            class="border border-slate-800 bg-slate-950/60 text-white rounded-lg px-3 py-2 w-full focus:outline-none focus:border-slate-700 focus:ring-1 focus:ring-slate-700 hover:border-slate-800 transition-all text-sm shadow-inner cursor-pointer"
+                            v-model="form.category_id"
+                            required
+                        >
+                            <option value="" disabled class="bg-slate-950 text-slate-500">Selecciona...</option>
+                            <option v-for="category in categories" :key="category.id" :value="category.id" class="bg-slate-900 text-white">{{ category.name }}</option>
+                        </select>
                     </div>
 
                     <!-- Fabricante -->
@@ -107,7 +121,7 @@ function submit() {
                             v-model="form.manufacturer_id"
                             required
                         >
-                            <option value="" disabled selected class="bg-slate-950 text-slate-500">Selecciona...</option>
+                            <option value="" disabled class="bg-slate-950 text-slate-500">Selecciona...</option>
                             <option v-for="manufacturer in manufacturers" :key="manufacturer.id" :value="manufacturer.id" class="bg-slate-900 text-white">{{ manufacturer.name }}</option>
                         </select>
                     </div>
@@ -120,7 +134,7 @@ function submit() {
                             v-model="form.location_id"
                             required
                         >
-                            <option value="" disabled selected class="bg-slate-950 text-slate-500">Selecciona...</option>
+                            <option value="" disabled class="bg-slate-950 text-slate-500">Selecciona...</option>
                             <option v-for="location in locations" :key="location.id" :value="location.id" class="bg-slate-900 text-white">{{ location.name }}</option>
                         </select>
                     </div>
@@ -133,7 +147,7 @@ function submit() {
                             v-model="form.status_id"
                             required
                         >
-                            <option value="" disabled selected class="bg-slate-950 text-slate-500">Selecciona...</option>
+                            <option value="" disabled class="bg-slate-950 text-slate-500">Selecciona...</option>
                             <option v-for="status in statuses" :key="status.id" :value="status.id" class="bg-slate-900 text-white">{{ status.name }}</option>
                         </select>
                     </div>
@@ -207,7 +221,7 @@ function submit() {
                 </div>
             </div>
 
-            <!-- Botones de Acción minimalistas -->
+            <!-- Botones de Acción (Guardar Cambios) -->
             <div class="flex items-center justify-end gap-4 pt-6 border-t border-slate-800/60">
                 <a 
                     href="/assets" 
@@ -217,9 +231,9 @@ function submit() {
                 </a>
                 <button
                     type="submit"
-                    class="bg-white hover:bg-slate-100 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-white/5 transition-all focus:outline-none focus:ring-2 focus:ring-white/40 active:scale-95 cursor-pointer "
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2 rounded-lg text-sm font-semibold shadow-lg shadow-blue-500/10 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500/40 active:scale-95"
                 >
-                    Guardar Activo
+                    Guardar Cambios
                 </button>
             </div>
 
