@@ -12,17 +12,49 @@ use App\Models\AssetStatus;
 
 class AssetController extends Controller
 {
-public function index()
+public function index(Request $request)
 {
+    $search = $request->search;
+
     $assets = Asset::with([
         'category',
         'manufacturer',
         'location',
         'status'
-    ])->get();
+    ])
+    ->when($search, function ($query) use ($search) {
+
+        $query->where('name', 'ilike', "%{$search}%")
+
+        ->orWhere('serial_number', 'ilike', "%{$search}%")
+
+        ->orWhere('inventory_tag', 'ilike', "%{$search}%")
+
+        ->orWhere('model_number', 'ilike', "%{$search}%")
+
+        ->orWhereHas('category', function ($q) use ($search) {
+            $q->where('name', 'ilike', "%{$search}%");
+        })
+
+        ->orWhereHas('manufacturer', function ($q) use ($search) {
+            $q->where('name', 'ilike', "%{$search}%");
+        })
+
+        ->orWhereHas('location', function ($q) use ($search) {
+            $q->where('name', 'ilike', "%{$search}%");
+        })
+
+        ->orWhereHas('status', function ($q) use ($search) {
+            $q->where('name', 'ilike', "%{$search}%");
+        });
+
+    })
+    ->paginate(10)
+     ->withQueryString();
 
     return Inertia::render('Assets/Index', [
-        'assets' => $assets
+        'assets' => $assets,
+        'search' => $search,
     ]);
 }
 
