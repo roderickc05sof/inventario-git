@@ -5,6 +5,8 @@ use App\Http\Controllers\Teams\TeamInvitationController;
 use App\Http\Middleware\EnsureTeamMembership;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssetController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ComponentController;
 
 Route::inertia('/', 'Welcome')->name('home');
 
@@ -17,16 +19,32 @@ Route::prefix('{current_team}')
         
         // Rutas de Activos protegidas dentro del contexto del equipo
     });
-     Route::get('assets', [AssetController::class, 'index'])->name('assets.index');
-     Route::get('assets/create',[AssetController::class, 'create'])->name('assets.create');
-     Route::post('/assets',[AssetController::class,'store'])->name('assets.store');
-   Route::get('/assets/{asset}/edit', [AssetController::class, 'edit'])
+    Route::get('assets', [AssetController::class, 'index'])->name('assets.index');
+    Route::get('assets/create',[AssetController::class, 'create'])->name('assets.create');
+    Route::post('/assets',[AssetController::class,'store'])->name('assets.store');
+    Route::get('/assets/{asset}/edit', [AssetController::class, 'edit'])
     ->name('assets.edit');
     Route::put('/assets/{asset}', [AssetController::class, 'update'])
     ->name('assets.update');
     Route::delete('/assets/{asset}', [AssetController::class, 'destroy'])
     ->name('assets.destroy');
+   Route::get('/components', [ComponentController::class, 'index'])
+    ->name('components.index');
 
+Route::get('/components/create', [ComponentController::class, 'create'])
+    ->name('components.create');
+
+Route::post('/components', [ComponentController::class, 'store'])
+    ->name('components.store');
+
+Route::get('/components/{component}/edit', [ComponentController::class, 'edit'])
+    ->name('components.edit');
+
+Route::put('/components/{component}', [ComponentController::class, 'update'])
+    ->name('components.update');
+
+Route::delete('/components/{component}', [ComponentController::class, 'destroy'])
+    ->name('components.destroy');
  //    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 
 // 3. Otras rutas protegidas de invitaciones

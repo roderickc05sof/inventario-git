@@ -15,7 +15,12 @@ import type { TeamInvitationContext } from '@/types';
 defineProps<{
     passwordRules: string;
     teamInvitation?: TeamInvitationContext | null;
+    roles: {
+        id_role: number;
+        descripcion: string;
+    }[];
 }>();
+
 
 defineOptions({
     layout: {
@@ -41,6 +46,7 @@ defineOptions({
         class="flex flex-col gap-6"
     >
         <div class="grid gap-6">
+            <!-- Nombre -->
             <div class="grid gap-2">
                 <Label for="name">Name</Label>
                 <Input
@@ -56,6 +62,7 @@ defineOptions({
                 <InputError :message="errors.name" />
             </div>
 
+            <!-- Email -->
             <div class="grid gap-2">
                 <Label for="email">Email address</Label>
                 <Input
@@ -70,6 +77,7 @@ defineOptions({
                 <InputError :message="errors.email" />
             </div>
 
+            <!-- Contraseña -->
             <div class="grid gap-2">
                 <Label for="password">Password</Label>
                 <PasswordInput
@@ -84,6 +92,7 @@ defineOptions({
                 <InputError :message="errors.password" />
             </div>
 
+            <!-- Confirmación de Contraseña -->
             <div class="grid gap-2">
                 <Label for="password_confirmation">Confirm password</Label>
                 <PasswordInput
@@ -97,24 +106,50 @@ defineOptions({
                 />
                 <InputError :message="errors.password_confirmation" />
             </div>
-        <div class="grid gap-2">
-    <Label for="role">ROLE</Label>
-   <select
-    id="role"
-    name="id_role"
-    required
->
-    <option value="" disabled selected>Select a role</option>
-    <option value="1">Administrator</option>
-    <option value="2">Soporte Técnico</option>
-    <option value="3">Consulta</option>
-</select>
+
+            <!-- Selección de Rol -->
+           <!-- Selección de Rol -->
+<div class="grid gap-2">
+    <Label for="role">Rol</Label>
+    
+    <div class="relative">
+        <select
+            id="role"
+            name="id_role"
+            required
+            :tabindex="5"
+            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm ring-offset-background text-foreground transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none [&::-ms-expand]:hidden"
+        >
+            <option value="" disabled selected class="text-muted-foreground">
+                Seleccione un rol
+            </option>
+
+            <option
+                v-for="role in roles"
+                :key="role.id_role"
+                :value="role.id_role"
+                class="bg-background text-foreground"
+            >
+                {{ role.descripcion }}
+            </option>
+        </select>
+
+        <!-- Ícono de flecha personalizado único -->
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+        </div>
+    </div>
+
     <InputError :message="errors.id_role" />
 </div>
+
+            <!-- Botón Submit -->
             <Button
                 type="submit"
                 class="mt-2 w-full"
-                tabindex="5"
+                :tabindex="6"
                 :disabled="processing"
                 data-test="register-user-button"
             >
@@ -123,6 +158,7 @@ defineOptions({
             </Button>
         </div>
 
+        <!-- Pie del Formulario -->
         <div class="text-center text-sm text-muted-foreground">
             Already have an account?
             <TextLink
@@ -136,7 +172,7 @@ defineOptions({
                         : login()
                 "
                 class="underline underline-offset-4"
-                :tabindex="6"
+                :tabindex="7"
                 data-test="team-invitation-login-link"
             >
                 Log in

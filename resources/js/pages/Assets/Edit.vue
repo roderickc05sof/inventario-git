@@ -49,10 +49,8 @@ function submit() {
 <template>
     <Head title="Editar Activo" />
 
-    <!-- Contenedor principal alineado con el estilo del formulario de creación -->
     <div class="max-w-4xl mx-auto p-6 md:p-10">
         
-        <!-- Cabecera Minimalista de Edición -->
         <div class="mb-8 border-b border-slate-800/60 pb-6">
             <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 Editar Activo
@@ -62,15 +60,12 @@ function submit() {
             </p>
         </div>
 
-        <!-- Tarjeta del Formulario (Estilo premium flotante) -->
         <form @submit.prevent="submit" class="bg-slate-900/40 border border-slate-800/80 rounded-xl p-6 md:p-8 shadow-2xl backdrop-blur-sm space-y-8">
             
-            <!-- SECCIÓN 1: Información Principal -->
             <div>
                 <h2 class="text-sm font-semibold uppercase tracking-wider text-blue-500 mb-4">Información del Activo</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Nombre -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Nombre del Activo</label>
                         <input 
@@ -95,12 +90,10 @@ function submit() {
                 </div>
             </div>
 
-            <!-- SECCIÓN 2: Clasificación e Identificación -->
             <div class="border-t border-slate-800/50 pt-6">
                 <h2 class="text-sm font-semibold uppercase tracking-wider text-blue-500 mb-4">Clasificación e Identificación</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Categoría -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Categoría</label>
                         <select 
@@ -113,7 +106,6 @@ function submit() {
                         </select>
                     </div>
 
-                    <!-- Fabricante -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Fabricante</label>
                         <select 
@@ -126,7 +118,6 @@ function submit() {
                         </select>
                     </div>
 
-                    <!-- Ubicación -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Ubicación</label>
                         <select 
@@ -139,7 +130,6 @@ function submit() {
                         </select>
                     </div>
 
-                    <!-- Estado -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Estado</label>
                         <select 
@@ -152,7 +142,6 @@ function submit() {
                         </select>
                     </div>
 
-                    <!-- Número de Serie -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Número de Serie</label>
                         <input 
@@ -163,7 +152,6 @@ function submit() {
                         >
                     </div>
 
-                    <!-- Código de Inventario -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Código de Inventario</label>
                         <input 
@@ -175,13 +163,10 @@ function submit() {
                     </div>
                 </div>
             </div>
-
-            <!-- SECCIÓN 3: Detalles de Compra -->
             <div class="border-t border-slate-800/50 pt-6">
                 <h2 class="text-sm font-semibold uppercase tracking-wider text-blue-500 mb-4">Detalles Financieros</h2>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Fecha de Compra -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Fecha de Compra</label>
                         <input 
@@ -191,7 +176,6 @@ function submit() {
                         >
                     </div>
 
-                    <!-- Costo -->
                     <div class="flex flex-col gap-1.5">
                         <label class="text-xs font-medium text-slate-300">Costo de Adquisición (USD)</label>
                         <div class="relative">
@@ -208,7 +192,6 @@ function submit() {
                 </div>
             </div>
 
-            <!-- SECCIÓN 4: Notas -->
             <div class="border-t border-slate-800/50 pt-6">
                 <div class="flex flex-col gap-1.5">
                     <label class="text-xs font-medium text-slate-300">Notas Adicionales</label>
@@ -221,7 +204,6 @@ function submit() {
                 </div>
             </div>
 
-            <!-- Botones de Acción (Guardar Cambios) -->
             <div class="flex items-center justify-end gap-4 pt-6 border-t border-slate-800/60">
                 <a 
                     href="/assets" 

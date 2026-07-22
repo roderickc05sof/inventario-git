@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Head,router } from '@inertiajs/vue3';
-import { ref } from 'vue'// 1. Definimos los Props tipados en TypeScript (agregando filters)
+import { ref } from 'vue'
 const props = defineProps<{
     assets: any;
     search?: string;
