@@ -1,182 +1,210 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-import InputError from '@/components/InputError.vue';
-import PasswordInput from '@/components/PasswordInput.vue';
-import TeamInvitationAlert from '@/components/TeamInvitationAlert.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
-import { login } from '@/routes';
-import { store } from '@/routes/register';
-import type { TeamInvitationContext } from '@/types';
+import { Head, useForm } from '@inertiajs/vue3';
+
+interface Role {
+    id_role: number;
+    descripcion: string;
+}
 
 defineProps<{
-    passwordRules: string;
-    teamInvitation?: TeamInvitationContext | null;
-    roles: {
-        id_role: number;
-        descripcion: string;
-    }[];
+    roles: Role[];
 }>();
 
-
-defineOptions({
-    layout: {
-        title: 'Create an account',
-        description: 'Enter your details below to create your account',
-    },
+const form = useForm({
+    name: '',
+    email: '',
+    password: '',
+    password_confirmation: '',
+    id_role: '',
 });
+
+function submit() {
+    form.post('/users');
+}
 </script>
 
 <template>
-    <Head title="Register" />
+    <Head title="Crear Usuario" />
 
-    <TeamInvitationAlert
-        v-if="teamInvitation"
-        :invitation="teamInvitation"
-        action="Register"
-    />
+    <div class="max-w-4xl mx-auto p-6 md:p-10">
 
-    <Form
-        v-bind="store.form()"
-        :reset-on-success="['password', 'password_confirmation']"
-        v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
-    >
-        <div class="grid gap-6">
-            <!-- Nombre -->
-            <div class="grid gap-2">
-                <Label for="name">Name</Label>
-                <Input
-                    id="name"
-                    type="text"
-                    required
-                    autofocus
-                    :tabindex="1"
-                    autocomplete="name"
-                    name="name"
-                    placeholder="Full name"
-                />
-                <InputError :message="errors.name" />
-            </div>
+        <div class="mb-8 border-b border-slate-800/60 pb-6">
+            <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                Crear Usuario
+            </h1>
 
-            <!-- Email -->
-            <div class="grid gap-2">
-                <Label for="email">Email address</Label>
-                <Input
-                    id="email"
-                    type="email"
-                    required
-                    :tabindex="2"
-                    autocomplete="email"
-                    name="email"
-                    placeholder="email@example.com"
-                />
-                <InputError :message="errors.email" />
+            <p class="mt-2 text-sm text-slate-400">
+                Registra un nuevo usuario para el sistema.
+            </p>
+        </div>
+
+        <form
+            @submit.prevent="submit"
+            class="bg-slate-900/40 border border-slate-800/80 rounded-xl p-6 md:p-8 shadow-2xl backdrop-blur-sm space-y-8"
+        >
+
+            <!-- Información -->
+            <div>
+
+                <h2 class="text-sm font-semibold uppercase tracking-wider text-blue-500 mb-4">
+                    Información del Usuario
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Nombre -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-medium text-slate-300">
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            v-model="form.name"
+                            class="border border-slate-800 bg-slate-950/60 text-white rounded-lg px-3 py-2"
+                            placeholder="Nombre completo"
+                        >
+
+                        <p
+                            v-if="form.errors.name"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ form.errors.name }}
+                        </p>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-medium text-slate-300">
+                            Correo
+                        </label>
+
+                        <input
+                            type="email"
+                            v-model="form.email"
+                            class="border border-slate-800 bg-slate-950/60 text-white rounded-lg px-3 py-2"
+                            placeholder="correo@ejemplo.com"
+                        >
+
+                        <p
+                            v-if="form.errors.email"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ form.errors.email }}
+                        </p>
+                    </div>
+
+                </div>
+
             </div>
 
             <!-- Contraseña -->
-            <div class="grid gap-2">
-                <Label for="password">Password</Label>
-                <PasswordInput
-                    id="password"
-                    required
-                    :tabindex="3"
-                    autocomplete="new-password"
-                    name="password"
-                    placeholder="Password"
-                    :passwordrules="passwordRules"
-                />
-                <InputError :message="errors.password" />
+            <div class="border-t border-slate-800/50 pt-6">
+
+                <h2 class="text-sm font-semibold uppercase tracking-wider text-blue-500 mb-4">
+                    Seguridad
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-medium text-slate-300">
+                            Contraseña
+                        </label>
+
+                        <input
+                            type="password"
+                            v-model="form.password"
+                            class="border border-slate-800 bg-slate-950/60 text-white rounded-lg px-3 py-2"
+                        >
+
+                        <p
+                            v-if="form.errors.password"
+                            class="text-red-500 text-sm"
+                        >
+                            {{ form.errors.password }}
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label class="text-xs font-medium text-slate-300">
+                            Confirmar contraseña
+                        </label>
+
+                        <input
+                            type="password"
+                            v-model="form.password_confirmation"
+                            class="border border-slate-800 bg-slate-950/60 text-white rounded-lg px-3 py-2"
+                        >
+                    </div>
+
+                </div>
+
             </div>
 
-            <!-- Confirmación de Contraseña -->
-            <div class="grid gap-2">
-                <Label for="password_confirmation">Confirm password</Label>
-                <PasswordInput
-                    id="password_confirmation"
-                    required
-                    :tabindex="4"
-                    autocomplete="new-password"
-                    name="password_confirmation"
-                    placeholder="Confirm password"
-                    :passwordrules="passwordRules"
-                />
-                <InputError :message="errors.password_confirmation" />
+            <!-- Rol -->
+            <div class="border-t border-slate-800/50 pt-6">
+
+                <h2 class="text-sm font-semibold uppercase tracking-wider text-blue-500 mb-4">
+                    Rol del Usuario
+                </h2>
+
+                <div class="flex flex-col gap-2">
+
+                    <label class="text-xs font-medium text-slate-300">
+                        Rol
+                    </label>
+
+                    <select
+                        v-model="form.id_role"
+                        class="border border-slate-800 bg-slate-950/60 text-white rounded-lg px-3 py-2"
+                    >
+                        <option value="">
+                            Seleccione un rol
+                        </option>
+
+                        <option
+                            v-for="role in roles"
+                            :key="role.id_role"
+                            :value="role.id_role"
+                        >
+                            {{ role.descripcion }}
+                        </option>
+
+                    </select>
+
+                    <p
+                        v-if="form.errors.id_role"
+                        class="text-red-500 text-sm"
+                    >
+                        {{ form.errors.id_role }}
+                    </p>
+
+                </div>
+
             </div>
 
-            <!-- Selección de Rol -->
-           <!-- Selección de Rol -->
-<div class="grid gap-2">
-    <Label for="role">Rol</Label>
-    
-    <div class="relative">
-        <select
-            id="role"
-            name="id_role"
-            required
-            :tabindex="5"
-            class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm ring-offset-background text-foreground transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 appearance-none [&::-ms-expand]:hidden"
-        >
-            <option value="" disabled selected class="text-muted-foreground">
-                Seleccione un rol
-            </option>
+            <!-- Botones -->
+            <div class="flex justify-end gap-4 pt-6 border-t border-slate-800/60">
 
-            <option
-                v-for="role in roles"
-                :key="role.id_role"
-                :value="role.id_role"
-                class="bg-background text-foreground"
-            >
-                {{ role.descripcion }}
-            </option>
-        </select>
+                <a
+                    href="/users"
+                    class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-white"
+                >
+                    Cancelar
+                </a>
 
-        <!-- Ícono de flecha personalizado único -->
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="h-4 w-4">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
-        </div>
+                <button
+                    type="submit"
+                    :disabled="form.processing"
+                    class="bg-white hover:bg-slate-100 text-slate-950 px-5 py-2 rounded-lg text-sm font-semibold cursor-pointer disabled:opacity-50"
+                >
+                    {{ form.processing ? 'Guardando...' : 'Guardar Usuario' }}
+                </button>
+
+            </div>
+
+        </form>
+
     </div>
-
-    <InputError :message="errors.id_role" />
-</div>
-
-            <!-- Botón Submit -->
-            <Button
-                type="submit"
-                class="mt-2 w-full"
-                :tabindex="6"
-                :disabled="processing"
-                data-test="register-user-button"
-            >
-                <Spinner v-if="processing" />
-                Create account
-            </Button>
-        </div>
-
-        <!-- Pie del Formulario -->
-        <div class="text-center text-sm text-muted-foreground">
-            Already have an account?
-            <TextLink
-                :href="
-                    teamInvitation
-                        ? login.url({
-                              query: {
-                                  invitation: teamInvitation.code,
-                              },
-                          })
-                        : login()
-                "
-                class="underline underline-offset-4"
-                :tabindex="7"
-                data-test="team-invitation-login-link"
-            >
-                Log in
-            </TextLink>
-        </div>
-    </Form>
 </template>

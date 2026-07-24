@@ -4,12 +4,13 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Teams\TeamInvitationController;
 use App\Http\Middleware\EnsureTeamMembership;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VistaController;
 use App\Http\Controllers\AssetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ComponentController;
+use App\Http\Controllers\PermisoController;
 
-Route::inertia('/', 'Welcome')->name('home');
-
+Route::redirect('/', '/login');
 // 2. Grupo protegido por equipo y autenticación (¡Aquí adentro deben ir tus activos!)
 Route::prefix('{current_team}')
     ->middleware(['auth', 'verified', EnsureTeamMembership::class])
@@ -19,6 +20,7 @@ Route::prefix('{current_team}')
         
         // Rutas de Activos protegidas dentro del contexto del equipo
     });
+    Route::resource('users', UserController::class);
     Route::get('assets', [AssetController::class, 'index'])->name('assets.index');
     Route::get('assets/create',[AssetController::class, 'create'])->name('assets.create');
     Route::post('/assets',[AssetController::class,'store'])->name('assets.store');
@@ -45,7 +47,22 @@ Route::put('/components/{component}', [ComponentController::class, 'update'])
 
 Route::delete('/components/{component}', [ComponentController::class, 'destroy'])
     ->name('components.destroy');
- //    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
+
+Route::resource('vistas', VistaController::class);
+ Route::get('/vista', [VistaController::class, 'index'])
+    ->name('vista.index');
+
+    Route::get('/permisos', [PermisoController::class,'index'])
+    ->name('permisos.index');
+
+Route::post('/permisos', [PermisoController::class,'update'])
+    ->name('permisos.update');
+
+    Route::get(
+    '/permisos/{role}',
+    [PermisoController::class,'getPermissions']
+);
+//    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
 
 // 3. Otras rutas protegidas de invitaciones
 Route::middleware(['auth'])->group(function () {
@@ -53,4 +70,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('invitations/{invitation}', [TeamInvitationController::class, 'decline'])->name('invitations.decline');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__.'/settings.php'
+
+;
