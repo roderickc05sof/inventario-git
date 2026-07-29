@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
+import debounce from 'lodash/debounce';
+import { Pencil, Trash2 } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -9,55 +11,40 @@ const props = defineProps<{
 
 const search = ref(props.search ?? '');
 
-function buscar() {
+const buscar = debounce(() => {
     router.get('/components', {
         search: search.value
     }, {
         preserveState: true,
         replace: true
     });
-}
+}, 300);
 
-function destroy(id: number) {
-    if (confirm('¿Eliminar este componente?')) {
+const destroy = (id: number) => {
+    if (confirm('¿Estás seguro de que deseas eliminar este componente?')) {
         router.delete(`/components/${id}`);
     }
-}
+};
 </script>
 
 <template>
-    <Head title="Components" />
+    <Head title="Componentes" />
     
-    <!-- Contenedor Principal con fondo y espaciado base -->
     <div class="p-4 md:p-8 min-h-screen bg-slate-950 text-white">
-        <!-- Bloque centralizado que alinea Título, Buscador y Tabla al mismo nivel -->
         <div class="max-w-7xl mx-auto space-y-8">
 
-            <!-- Cabecera de la Página -->
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800/60 pb-6">
-                <div>
-                    <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                        Inventario de Componentes
-                    </h1>
-                    <p class="mt-2 text-sm text-slate-400">
-                        Gestiona los componentes asociados a los activos.
-                    </p>
-                </div>
-
-                <a
-                    href="/components/create"
-                    class="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-slate-950 px-5 py-2.5 rounded-lg text-sm font-semibold shadow-lg shadow-white/5 transition-all duration-150 active:scale-95 self-start sm:self-auto"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                    </svg>
-                    Nuevo Componente
-                </a>
+            <div class="border-b border-slate-800/60 pb-6">
+                <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                    Inventario de Componentes
+                </h1>
+                <p class="mt-2 text-sm text-slate-400">
+                    Gestiona los componentes asociados a los activos.
+                </p>
             </div>
 
-            <!-- Barra de Búsqueda -->
-            <div>
-                <div class="relative w-full md:w-96">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                
+                <div class="relative w-full sm:w-96">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-500">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4.5 h-4.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.602 10.602Z" />
@@ -72,9 +59,18 @@ function destroy(id: number) {
                         class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-800 bg-slate-950/60 text-white placeholder:text-slate-600 shadow-inner text-sm focus:outline-none focus:border-slate-700 focus:ring-1 focus:ring-slate-700 hover:border-slate-800 transition-all"
                     >
                 </div>
+
+                <a
+                    href="/components/create"
+                    class="inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-slate-950 px-5 py-2.5 rounded-lg text-sm font-semibold shadow-lg shadow-white/5 transition-all duration-150 active:scale-95 w-full sm:w-auto"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Nuevo Componente
+                </a>
             </div>
 
-            <!-- Contenedor de la Tabla (Ahora perfectamente alineado con el título) -->
             <div class="overflow-x-auto rounded-lg border border-gray-800 bg-slate-900 shadow-xl">
                 <table class="w-full border-collapse text-left text-sm text-white">
                     <thead class="bg-slate-800 text-xs uppercase text-gray-400">
@@ -100,30 +96,31 @@ function destroy(id: number) {
                             :key="component.id" 
                             class="hover:bg-slate-800/50 transition-colors"
                         >
-                            <td class="p-4 font-medium">{{ component.serial_number ?? '-' }}</td>
+                            <td class="p-4 font-medium text-gray-200">{{ component.serial_number ?? '-' }}</td>
                             <td class="p-4 text-gray-300">{{ component.brand ?? '-' }}</td>
                             <td class="p-4 text-gray-300">{{ component.asset?.name }}</td>
                             <td class="p-4 text-gray-300">{{ component.component_type?.name }}</td>
-                            <td class="p-4 text-right space-x-2">
+                            <td class="p-4 flex items-center justify-center space-x-2">
                                 <a
                                     :href="`/components/${component.id}/edit`"
-                                    class="inline-flex items-center rounded bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-1.5 text-xs font-semibold transition-colors"
+                                    class="p-2 rounded-md bg-slate-800/80 text-yellow-500 hover:bg-yellow-500 hover:text-white transition-colors"
+                                    title="Editar"
                                 >
-                                    Editar
+                                    <Pencil class="w-4 h-4" />
                                 </a>
 
                                 <button
                                     @click="destroy(component.id)"
-                                    class="inline-flex items-center rounded bg-red-600 hover:bg-red-500 text-white px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer"
+                                    class="p-2 rounded-md bg-slate-800/80 text-red-500 hover:bg-red-600 hover:text-white transition-colors cursor-pointer"
+                                    title="Eliminar"
                                 >
-                                    Eliminar
+                                    <Trash2 class="w-4 h-4" />
                                 </button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <!-- Paginación interna de la tarjeta de la tabla -->
                 <div class="flex justify-center py-4 border-t border-gray-800 gap-1.5 bg-slate-900/50">
                     <template v-for="link in props.components.links" :key="link.label">
                         <a

@@ -7,7 +7,13 @@ import {
     KeyRound, 
     ShieldCheck, 
     UserPlus, 
-    Users 
+    Users,
+    BookOpen,
+    MapPin,
+    Tags,
+    Factory,
+    Activity,
+    ClipboardList
 } from 'lucide-vue-next';
 import { computed } from 'vue';
 
@@ -40,12 +46,43 @@ const mainNavItems = computed<NavItem[]>(() => {
             href: '/components',
             icon: Cpu,
         },
+        {
+            title: 'Asignaciones',
+            href: '/assignments',
+            icon: ClipboardList,
+        },
+        {
+            title: 'Catálogos',
+            href: '#',
+            icon: BookOpen,
+            items: [
+                {
+                    title: 'Ubicaciones',
+                    href: '/locations',
+                    icon: MapPin,
+                },
+                {
+                    title: 'Categorías',
+                    href: '/categories',
+                    icon: Tags,
+                },
+                {
+                    title: 'Fabricantes',
+                    href: '/manufacturers',
+                    icon: Factory,
+                },
+                {
+                    title: 'Estados',
+                    href: '/asset-statuses',
+                    icon: Activity,
+                },
+            ]
+        }
     ];
 
     const auth = (page.props as Record<string, any>)?.auth || {};
     const user = auth.user || {};
 
-    // Extraemos el rol soportando string o un objeto role
     const userRole = (
         typeof user.role === 'string' 
             ? user.role 

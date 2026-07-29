@@ -2,29 +2,26 @@
 import { Link } from '@inertiajs/vue3';
 import { ChevronRight } from 'lucide-vue-next';
 
-// Componentes de Collapsible (acordeón desplegable)
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 
-// Componentes de Sidebar UI
 import {
     SidebarGroup,
-    SidebarGroupLabel,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarMenuSub,
     SidebarMenuSubButton,
     SidebarMenuSubItem,
+    useSidebar
 } from '@/components/ui/sidebar';
 
 import { useCurrentUrl } from '@/composables/useCurrentUrl';
 import type { NavItem } from '@/types/navigation';
 
-// Extendemos la interfaz localmente por si la de types no tiene 'items'
 interface CustomNavItem extends NavItem {
     items?: CustomNavItem[];
 }
@@ -34,15 +31,21 @@ defineProps<{
 }>();
 
 const { isCurrentUrl } = useCurrentUrl();
+
+const { state, setOpen } = useSidebar();
+
+function expandirSidebar() {
+    if (state.value === 'collapsed') {
+        setOpen(true);
+    }
+}
 </script>
 
 <template>
     <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>Plataforma</SidebarGroupLabel>
         <SidebarMenu>
             <template v-for="item in items" :key="item.title">
                 
-                <!-- CASO 1: Si tiene sub-ítems (se despliega) -->
                 <Collapsible
                     v-if="item.items && item.items.length > 0"
                     as-child
@@ -51,7 +54,7 @@ const { isCurrentUrl } = useCurrentUrl();
                 >
                     <SidebarMenuItem>
                         <CollapsibleTrigger as-child>
-                            <SidebarMenuButton :tooltip="item.title">
+                            <SidebarMenuButton :tooltip="item.title" @click="expandirSidebar">
                                 <component :is="item.icon" v-if="item.icon" />
                                 <span>{{ item.title }}</span>
                                 <ChevronRight
@@ -81,7 +84,6 @@ const { isCurrentUrl } = useCurrentUrl();
                     </SidebarMenuItem>
                 </Collapsible>
 
-                <!-- CASO 2: Si es un enlace normal simple -->
                 <SidebarMenuItem v-else>
                     <SidebarMenuButton
                         as-child
